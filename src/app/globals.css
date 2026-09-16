@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  @apply bg-kemet-white text-kemet-black font-body antialiased;
+}
+
+::selection {
+  @apply bg-kemet-gold/30 text-kemet-black;
+}
+
+/* Visible, high-contrast focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #c9a13b;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded focus:bg-kemet-black focus:px-4 focus:py-2 focus:text-kemet-gold;
+}
+
+/* Subtle Kemetic geometric divider */
+.kemet-divider {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9a13b, transparent);
+}
+
+.kemet-divider::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  transform: translateX(-50%) rotate(45deg);
+  background: #c9a13b;
+}
+
+.pattern-kemet {
+  background-image: repeating-linear-gradient(
+      45deg,
+      rgba(201, 161, 59, 0.06) 0px,
+      rgba(201, 161, 59, 0.06) 1px,
+      transparent 1px,
+      transparent 14px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(201, 161, 59, 0.06) 0px,
+      rgba(201, 161, 59, 0.06) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+}
