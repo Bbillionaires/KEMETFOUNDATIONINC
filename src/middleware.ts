@@ -5,8 +5,12 @@ export default withAuth(
   function middleware(req) {
     const { pathname } = req.nextUrl;
     const role = req.nextauth.token?.role;
+    const isAdminRoute = pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
 
-    if (pathname.startsWith("/admin") && role !== "ADMIN" && role !== "SUPERADMIN") {
+    if (isAdminRoute && role !== "ADMIN" && role !== "SUPERADMIN") {
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
       return NextResponse.redirect(new URL("/membership/login", req.url));
     }
 
@@ -23,5 +27,11 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/admin/:path*",
+    "/api/admin/:path*",
+    "/api/member/:path*",
+    "/api/events/:id/register",
+  ],
 };
