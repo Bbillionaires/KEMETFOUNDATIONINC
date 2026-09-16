@@ -8,8 +8,8 @@ const statusSchema = z.object({
 });
 
 // Manual status override for edge cases (e.g. marking a check/cash donation as
-// SUCCEEDED). Stripe-originated donations are otherwise kept in sync by the
-// webhook handler owned by the donations/payments teammate.
+// SUCCEEDED). Square-originated donations are otherwise kept in sync by the
+// webhook handler in src/app/api/donations/webhook/route.ts.
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { response } = await requireAdmin();
   if (response) return response;

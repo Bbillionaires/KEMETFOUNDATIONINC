@@ -166,10 +166,16 @@ model Donation {
   dedicationMessage String?
   publicRecognition Boolean           @default(false)
 
-  stripeCheckoutSessionId String?        @unique
-  stripeSubscriptionId    String?
-  stripePaymentIntentId   String?
-  status                  DonationStatus @default(PENDING)
+  squarePaymentLinkId   String?        @unique
+  squareOrderId         String?
+  squarePaymentId       String?
+  squareSubscriptionId  String?
+  // Set only for MONTHLY donations: the dynamically-created Catalog
+  // subscription plan variation priced for this exact donation amount.
+  // Used to correlate the `subscription.created` webhook (which carries
+  // no reference_id of its own) back to this row.
+  squarePlanVariationId String?
+  status                DonationStatus @default(PENDING)
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)

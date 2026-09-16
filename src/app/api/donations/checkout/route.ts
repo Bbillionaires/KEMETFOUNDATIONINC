@@ -1,11 +1,13 @@
+import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { donationSchema } from "@/lib/validations";
-import { getStripeClient, isStripeConfigured } from "@/lib/stripe";
+import { getSquareClient, getSquareLocationId, isSquareConfigured } from "@/lib/square";
 import { SITE_URL } from "@/lib/constants";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import type { Order, CheckoutOptions } from "square";
 
 export async function POST(req: Request) {
   const ip = getClientIp(req.headers);
@@ -24,15 +26,15 @@ export async function POST(req: Request) {
     );
   }
 
-  if (!isStripeConfigured()) {
+  if (!isSquareConfigured()) {
     return NextResponse.json(
       { error: "Online donations are not yet configured. Please contact us directly." },
       { status: 503 }
     );
   }
 
-  const stripe = getStripeClient();
-  if (!stripe) {
+  const square = getSquareClient();
+  if (!square) {
     return NextResponse.json(
       { error: "Online donations are not yet configured. Please contact us directly." },
       { status: 503 }
@@ -41,10 +43,10 @@ export async function POST(req: Request) {
 
   const data = parsed.data;
   const session = await getServerSession(authOptions);
+  const locationId = getSquareLocationId();
 
   // Amounts are always taken from the validated request body (server-side
-  // computed by donationSchema), never trusted from a client-supplied Stripe
-  // price or line item.
+  // computed by donationSchema), never trusted from a client-supplied price.
   const donation = await prisma.donation.create({
     data: {
       donorName: data.donorName,
@@ -58,57 +60,110 @@ export async function POST(req: Request) {
     },
   });
 
-  const successUrl = `${SITE_URL}/donate/thank-you?session_id={CHECKOUT_SESSION_ID}`;
-  const cancelUrl = `${SITE_URL}/donate`;
+  const dollars = (data.amountCents / 100).toFixed(2);
 
   try {
-    const checkoutSession =
+    let subscriptionPlanVariationId: string | undefined;
+
+    if (data.frequency === "MONTHLY") {
+      // Square subscriptions require a fixed-price Catalog subscription
+      // plan; since donors pick an arbitrary amount, create a one-off plan
+      // + variation priced for this exact donation (see square.ts research
+      // notes — there is no inline arbitrary-amount subscription field).
+      const planName = `Monthly Donation - $${dollars}`;
+      const catalogResponse = await square.catalog.batchUpsert({
+        idempotencyKey: randomUUID(),
+        batches: [
+          {
+            objects: [
+              {
+                type: "SUBSCRIPTION_PLAN",
+                id: "#plan",
+                subscriptionPlanData: {
+                  name: planName,
+                  phases: [
+                    {
+                      cadence: "MONTHLY",
+                      recurringPriceMoney: { amount: BigInt(data.amountCents), currency: "USD" },
+                      ordinal: BigInt(0),
+                    },
+                  ],
+                },
+              },
+              {
+                type: "SUBSCRIPTION_PLAN_VARIATION",
+                id: "#variation",
+                subscriptionPlanVariationData: {
+                  name: planName,
+                  subscriptionPlanId: "#plan",
+                  phases: [
+                    {
+                      cadence: "MONTHLY",
+                      recurringPriceMoney: { amount: BigInt(data.amountCents), currency: "USD" },
+                      ordinal: BigInt(0),
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      });
+
+      subscriptionPlanVariationId =
+        catalogResponse.idMappings?.find((m) => m.clientObjectId === "#variation")?.objectId ??
+        undefined;
+
+      if (!subscriptionPlanVariationId) {
+        throw new Error("Square did not return a subscription plan variation ID");
+      }
+
+      await prisma.donation.update({
+        where: { id: donation.id },
+        data: { squarePlanVariationId: subscriptionPlanVariationId },
+      });
+    }
+
+    const order: Order =
       data.frequency === "MONTHLY"
-        ? await stripe.checkout.sessions.create({
-            mode: "subscription",
-            line_items: [
+        ? { locationId, referenceId: donation.id }
+        : {
+            locationId,
+            referenceId: donation.id,
+            lineItems: [
               {
-                price_data: {
-                  currency: "usd",
-                  product_data: { name: "Monthly Donation to Kemet Foundation Inc" },
-                  recurring: { interval: "month" },
-                  unit_amount: data.amountCents,
-                },
-                quantity: 1,
+                name: "Donation to Kemet Foundation Inc",
+                quantity: "1",
+                basePriceMoney: { amount: BigInt(data.amountCents), currency: "USD" },
               },
             ],
-            customer_email: data.donorEmail,
-            success_url: successUrl,
-            cancel_url: cancelUrl,
-            metadata: { donationId: donation.id },
-            subscription_data: { metadata: { donationId: donation.id } },
-          })
-        : await stripe.checkout.sessions.create({
-            mode: "payment",
-            line_items: [
-              {
-                price_data: {
-                  currency: "usd",
-                  product_data: { name: "Donation to Kemet Foundation Inc" },
-                  unit_amount: data.amountCents,
-                },
-                quantity: 1,
-              },
-            ],
-            customer_email: data.donorEmail,
-            success_url: successUrl,
-            cancel_url: cancelUrl,
-            metadata: { donationId: donation.id },
-          });
+          };
+
+    const checkoutOptions: CheckoutOptions = {
+      redirectUrl: `${SITE_URL}/donate/thank-you`,
+      acceptedPaymentMethods: { cashAppPay: true, applePay: true, googlePay: true },
+      ...(subscriptionPlanVariationId ? { subscriptionPlanId: subscriptionPlanVariationId } : {}),
+    };
+
+    const { paymentLink } = await square.checkout.paymentLinks.create({
+      idempotencyKey: randomUUID(),
+      order,
+      checkoutOptions,
+      prePopulatedData: { buyerEmail: data.donorEmail },
+    });
+
+    if (!paymentLink?.url) {
+      throw new Error("Square did not return a payment link URL");
+    }
 
     await prisma.donation.update({
       where: { id: donation.id },
-      data: { stripeCheckoutSessionId: checkoutSession.id },
+      data: { squarePaymentLinkId: paymentLink.id, squareOrderId: paymentLink.orderId },
     });
 
-    return NextResponse.json({ url: checkoutSession.url });
+    return NextResponse.json({ url: paymentLink.url });
   } catch (err) {
-    console.error("[donations/checkout] Stripe session creation failed:", err instanceof Error ? err.message : err);
+    console.error("[donations/checkout] Square checkout creation failed:", err instanceof Error ? err.message : err);
     await prisma.donation
       .update({ where: { id: donation.id }, data: { status: "FAILED" } })
       .catch(() => {});

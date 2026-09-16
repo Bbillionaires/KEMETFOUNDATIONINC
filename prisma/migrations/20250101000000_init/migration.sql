@@ -110,9 +110,11 @@ CREATE TABLE "Donation" (
     "frequency" "DonationFrequency" NOT NULL DEFAULT 'ONE_TIME',
     "dedicationMessage" TEXT,
     "publicRecognition" BOOLEAN NOT NULL DEFAULT false,
-    "stripeCheckoutSessionId" TEXT,
-    "stripeSubscriptionId" TEXT,
-    "stripePaymentIntentId" TEXT,
+    "squarePaymentLinkId" TEXT,
+    "squareOrderId" TEXT,
+    "squarePaymentId" TEXT,
+    "squareSubscriptionId" TEXT,
+    "squarePlanVariationId" TEXT,
     "status" "DonationStatus" NOT NULL DEFAULT 'PENDING',
     "userId" TEXT,
     "receiptEmailSentAt" TIMESTAMP(3),
@@ -210,7 +212,7 @@ CREATE INDEX "EventRegistration_eventId_idx" ON "EventRegistration"("eventId");
 CREATE UNIQUE INDEX "EventRegistration_eventId_userId_key" ON "EventRegistration"("eventId", "userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Donation_stripeCheckoutSessionId_key" ON "Donation"("stripeCheckoutSessionId");
+CREATE UNIQUE INDEX "Donation_squarePaymentLinkId_key" ON "Donation"("squarePaymentLinkId");
 
 -- CreateIndex
 CREATE INDEX "Donation_status_idx" ON "Donation"("status");

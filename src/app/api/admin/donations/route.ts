@@ -5,7 +5,7 @@ import { donationSchema } from "@/lib/validations";
 import { requireAdmin } from "@/lib/admin-auth";
 
 // Manual (offline) donation entry: extends the public donation schema with an
-// admin-settable status, since these gifts don't flow through Stripe.
+// admin-settable status, since these gifts don't flow through Square.
 const manualDonationSchema = donationSchema.extend({
   status: z.enum(["PENDING", "SUCCEEDED", "FAILED", "REFUNDED", "CANCELLED"]).default("SUCCEEDED"),
 });
@@ -33,7 +33,6 @@ export async function POST(req: Request) {
       dedicationMessage: data.dedicationMessage || null,
       publicRecognition: data.publicRecognition,
       status: data.status,
-      stripeCheckoutSessionId: null,
     },
   });
 

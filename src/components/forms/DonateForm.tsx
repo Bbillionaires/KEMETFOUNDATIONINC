@@ -229,6 +229,11 @@ export function DonateForm() {
           ? "Redirecting to Checkout..."
           : `Donate ${formatDollars(amountCents || 0)}${frequency === "MONTHLY" ? "/mo" : ""}`}
       </Button>
+
+      <p className="mt-3 text-center text-xs text-kemet-charcoal/60">
+        You&apos;ll be redirected to a secure Square checkout page. Card, Cash App Pay, Apple Pay, and
+        Google Pay are accepted.
+      </p>
     </form>
   );
 }
