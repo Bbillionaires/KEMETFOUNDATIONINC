@@ -6,6 +6,15 @@ import { FireParticles } from "@/components/brand/FireParticles";
 
 const SESSION_KEY = "kemet-intro-seen-v1";
 
+// Relative size/spacing of the wordmark crop against the emblem crop,
+// measured directly from the official source artwork (1372x504 emblem
+// crop, 1097x395 wordmark crop, 7px original-image gap between them) so
+// the two pieces recompose at their true proportions when animated
+// separately, rather than each independently stretching to fill its
+// container.
+const WORDMARK_WIDTH_PCT = (1097 / 1372) * 100;
+const WORDMARK_GAP_PCT = (7 / 1372) * 100;
+
 type Phase = "static" | "separate" | "rise" | "spin" | "extinguish" | "settle" | "done";
 
 /**
@@ -203,7 +212,14 @@ export function LogoIntro() {
             />
           )}
         </div>
-        <div style={{ opacity: wordmarkOpacity, marginTop: "-15%" }} className="w-full">
+        <div
+          style={{
+            opacity: wordmarkOpacity,
+            marginTop: `${WORDMARK_GAP_PCT}%`,
+            width: `${WORDMARK_WIDTH_PCT}%`,
+          }}
+          className="mx-auto"
+        >
           <KemetLogo wordmarkOnly className="h-auto w-full" />
         </div>
       </div>
