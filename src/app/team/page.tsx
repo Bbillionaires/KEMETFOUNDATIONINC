@@ -4,6 +4,8 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Our Team",
   description: "Meet the team behind Kemet Foundation Inc.",

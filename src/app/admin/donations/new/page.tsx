@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { DonationForm } from "@/components/admin/DonationForm";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Add Manual Donation",
 };

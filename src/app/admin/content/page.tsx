@@ -3,6 +3,8 @@ import { getSiteContentMap } from "@/lib/site-content";
 import { Card } from "@/components/ui/Card";
 import { SiteContentField } from "@/components/admin/SiteContentField";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Site Content",
 };

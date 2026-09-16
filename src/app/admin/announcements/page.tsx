@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/Card";
 import { AnnouncementForm } from "@/components/admin/AnnouncementForm";
 import { AnnouncementRow } from "@/components/admin/AnnouncementRow";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Announcements",
 };

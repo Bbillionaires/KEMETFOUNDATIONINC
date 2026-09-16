@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { DonationStatusSelect } from "@/components/admin/DonationStatusSelect";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Donations",
 };

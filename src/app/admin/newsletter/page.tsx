@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Label, Input, Select } from "@/components/ui/Field";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Newsletter",
 };

@@ -7,6 +7,8 @@ import { DonateForm } from "@/components/forms/DonateForm";
 import { getSiteContent } from "@/lib/site-content";
 import { SITE_NAME } from "@/lib/constants";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Donate",
   description: `Support ${SITE_NAME}'s work in African heritage and cultural education, community development, and economic empowerment with a one-time or monthly gift.`,

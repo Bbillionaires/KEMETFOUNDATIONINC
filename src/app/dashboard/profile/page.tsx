@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { Card } from "@/components/ui/Card";
 import { ProfileForm } from "@/components/forms/ProfileForm";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "My Profile",
 };

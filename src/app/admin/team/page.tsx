@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/Card";
 import { TeamMemberForm } from "@/components/admin/TeamMemberForm";
 import { TeamMemberRow } from "@/components/admin/TeamMemberRow";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Team",
 };

@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/Card";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Event Registrations",
 };

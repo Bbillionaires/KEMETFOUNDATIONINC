@@ -5,6 +5,8 @@ import { Card, Badge } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { EventQuickActions } from "@/components/admin/EventQuickActions";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Events",
 };

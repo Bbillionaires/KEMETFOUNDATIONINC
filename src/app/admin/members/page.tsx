@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import type { MembershipStatus } from "@prisma/client";
 import { MemberStatusSelect } from "@/components/admin/MemberStatusSelect";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Members",
 };

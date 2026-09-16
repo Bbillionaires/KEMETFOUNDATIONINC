@@ -4,6 +4,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { getSiteContentMap } from "@/lib/site-content";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Our Mission",
   description:

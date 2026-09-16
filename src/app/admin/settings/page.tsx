@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/Card";
 import { TaxExemptToggle } from "@/components/admin/TaxExemptToggle";
 import { SiteContentField } from "@/components/admin/SiteContentField";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Settings",
 };

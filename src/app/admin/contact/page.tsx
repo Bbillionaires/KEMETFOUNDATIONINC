@@ -5,6 +5,8 @@ import type { ContactStatus } from "@prisma/client";
 import { Card, Badge } from "@/components/ui/Card";
 import { ContactStatusSelect } from "@/components/admin/ContactStatusSelect";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Contact Submissions",
 };

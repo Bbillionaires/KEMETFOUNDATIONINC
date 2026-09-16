@@ -9,6 +9,8 @@ import { Card, Badge } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { NewsletterToggle } from "@/components/dashboard/NewsletterToggle";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Dashboard",
 };

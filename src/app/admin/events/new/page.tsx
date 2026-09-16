@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { EventForm } from "@/components/admin/EventForm";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "New Event",
 };

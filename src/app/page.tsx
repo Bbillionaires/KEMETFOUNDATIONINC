@@ -9,6 +9,8 @@ import { DonateBanner } from "@/components/home/DonateBanner";
 import { NewsletterSection } from "@/components/home/NewsletterSection";
 import { SITE_NAME } from "@/lib/constants";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: `${SITE_NAME} | Building Community. Preserving Legacy.`,
   description:

@@ -7,6 +7,8 @@ import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { SITE_NAME } from "@/lib/constants";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Donor Recognition Wall",
   description: `With gratitude to the donors who support ${SITE_NAME}'s mission.`,

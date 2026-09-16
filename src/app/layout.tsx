@@ -33,15 +33,35 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_NAME,
   },
-  icons: {
-    icon: "/favicon.ico",
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "NGO",
+  name: SITE_NAME,
+  url: SITE_URL,
+  address: {
+    "@type": "PostalAddress",
+    postOfficeBoxNumber: "2284",
+    addressLocality: "Jacksonville",
+    addressRegion: "FL",
+    postalCode: "32208",
+    addressCountry: "US",
   },
+  areaServed: "US-FL",
+  description:
+    "A Florida nonprofit dedicated to African heritage and cultural education, community development, family strengthening, economic empowerment, and collective advancement.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="flex min-h-screen flex-col">
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
