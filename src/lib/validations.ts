@@ -67,11 +67,13 @@ export const newsletterSchema = z.object({
 export const donationSchema = z.object({
   amountCents: z.number().int().min(500, "Minimum donation is $5").max(100000000),
   frequency: z.enum(["ONE_TIME", "MONTHLY"]),
-  donorName: z.string().trim().min(1).max(150),
-  donorEmail: z.string().trim().email(),
+  donorName: z.string().trim().min(1, "Name is required").max(150),
+  donorEmail: z.string().trim().email("Enter a valid email address"),
   dedicationMessage: z.string().trim().max(1000).optional().or(z.literal("")),
   publicRecognition: z.boolean().default(false),
 });
+
+export type DonationInput = z.infer<typeof donationSchema>;
 
 export const eventRegistrationSchema = z.object({
   eventId: z.string().min(1),
