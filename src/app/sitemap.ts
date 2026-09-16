@@ -9,13 +9,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, changeFrequency: "weekly", priority: 1 },
     { url: `${SITE_URL}/mission`, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${SITE_URL}/membership`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/events`, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/donate`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/team`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/contact`, changeFrequency: "yearly", priority: 0.6 },
-    { url: `${SITE_URL}/membership/register`, changeFrequency: "yearly", priority: 0.5 },
-    { url: `${SITE_URL}/membership/login`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${SITE_URL}/donate/wall`, changeFrequency: "weekly", priority: 0.4 },
     { url: `${SITE_URL}/terms`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${SITE_URL}/privacy`, changeFrequency: "yearly", priority: 0.2 },

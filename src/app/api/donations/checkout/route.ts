@@ -1,7 +1,5 @@
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { donationSchema } from "@/lib/validations";
 import { getSquareClient, getSquareLocationId, isSquareConfigured } from "@/lib/square";
@@ -42,7 +40,6 @@ export async function POST(req: Request) {
   }
 
   const data = parsed.data;
-  const session = await getServerSession(authOptions);
   const locationId = getSquareLocationId();
 
   // Amounts are always taken from the validated request body (server-side
@@ -56,7 +53,6 @@ export async function POST(req: Request) {
       dedicationMessage: data.dedicationMessage || null,
       publicRecognition: data.publicRecognition,
       status: "PENDING",
-      userId: session?.user?.id ?? null,
     },
   });
 

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/home/Hero";
 import { MissionTeaser } from "@/components/home/MissionTeaser";
-import { MembershipTeaser } from "@/components/home/MembershipTeaser";
 import { Pillars } from "@/components/home/Pillars";
 import { UpcomingEvents } from "@/components/home/UpcomingEvents";
 import { GetInvolved } from "@/components/home/GetInvolved";
@@ -22,7 +21,6 @@ export default function HomePage() {
     <>
       <Hero />
       <MissionTeaser />
-      <MembershipTeaser />
       <Pillars />
       <UpcomingEvents />
       <GetInvolved />

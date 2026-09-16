@@ -18,7 +18,6 @@ export const ORG_EMAIL = process.env.NEXT_PUBLIC_ORG_EMAIL || "info@kemetfoundat
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/mission", label: "Our Mission" },
-  { href: "/membership", label: "Membership" },
   { href: "/events", label: "Events" },
   { href: "/team", label: "Our Team" },
   { href: "/contact", label: "Contact" },

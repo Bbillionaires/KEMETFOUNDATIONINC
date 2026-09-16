@@ -11,12 +11,6 @@ const options = [
     cta: "Get in Touch",
   },
   {
-    title: "Become a Member",
-    description: "Join our community and help guide the direction of our work.",
-    href: "/membership/register",
-    cta: "Join Us",
-  },
-  {
     title: "Donate",
     description: "Support our mission with a one-time or recurring gift.",
     href: "/donate",

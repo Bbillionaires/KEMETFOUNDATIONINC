@@ -18,10 +18,6 @@ export const metadata: Metadata = {
 // page is always rendered fresh rather than statically cached.
 export const dynamic = "force-dynamic";
 
-type EventWithCount = Event & {
-  _count: { registrations: number };
-};
-
 async function getEvents() {
   const now = new Date();
 
@@ -29,20 +25,18 @@ async function getEvents() {
     prisma.event.findMany({
       where: { status: "PUBLISHED", startAt: { gte: now } },
       orderBy: { startAt: "asc" },
-      include: { _count: { select: { registrations: { where: { status: "CONFIRMED" } } } } },
     }),
     prisma.event.findMany({
       where: { status: "PUBLISHED", startAt: { lt: now } },
       orderBy: { startAt: "desc" },
       take: 12,
-      include: { _count: { select: { registrations: { where: { status: "CONFIRMED" } } } } },
     }),
   ]);
 
   return { upcoming, past };
 }
 
-function toCardData(event: EventWithCount): EventCardData {
+function toCardData(event: Event): EventCardData {
   return {
     id: event.id,
     slug: event.slug,
@@ -55,11 +49,10 @@ function toCardData(event: EventWithCount): EventCardData {
     isFree: event.isFree,
     priceCents: event.priceCents,
     capacity: event.capacity,
-    confirmedCount: event._count.registrations,
   };
 }
 
-function toCalendarEvent(event: EventWithCount): CalendarEvent {
+function toCalendarEvent(event: Event): CalendarEvent {
   return {
     id: event.id,
     slug: event.slug,

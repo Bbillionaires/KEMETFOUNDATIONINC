@@ -7,28 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  MEMBER
-  ADMIN
-  SUPERADMIN
-}
-
-enum MembershipStatus {
-  PENDING
-  ACTIVE
-  INACTIVE
-  DECLINED
-}
-
 enum EventStatus {
   DRAFT
   PUBLISHED
-  CANCELLED
-}
-
-enum RegistrationStatus {
-  CONFIRMED
-  WAITLISTED
   CANCELLED
 }
 
@@ -66,56 +47,6 @@ enum AnnouncementAudience {
   MEMBERS
 }
 
-model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String
-  role         Role     @default(MEMBER)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  profile            MemberProfile?
-  eventRegistrations EventRegistration[]
-  donations          Donation[]
-  createdEvents      Event[]             @relation("EventCreatedBy")
-
-  @@index([role])
-}
-
-model MemberProfile {
-  id     String @id @default(cuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  firstName String
-  lastName  String
-  phone     String
-  city      String
-  state     String
-  zip       String
-
-  businessOrg          String?
-  occupation           String?
-  skills               String?
-  volunteerSkills      String?
-  areasOfInterest      String?
-  contributionInterest String?
-
-  newsletterOptIn   Boolean  @default(false)
-  termsAcceptedAt   DateTime
-  privacyAcceptedAt DateTime
-
-  membershipStatus    MembershipStatus @default(PENDING)
-  appliedAt           DateTime         @default(now())
-  reviewedAt          DateTime?
-  reviewedByAdminNote String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([membershipStatus])
-}
-
 model Event {
   id                   String      @id @default(cuid())
   title                String
@@ -131,29 +62,10 @@ model Event {
   priceCents           Int?
   status               EventStatus @default(DRAFT)
 
-  createdByUserId String?
-  createdBy       User?   @relation("EventCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
-
-  registrations EventRegistration[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([status, startAt])
-}
-
-model EventRegistration {
-  id                      String             @id @default(cuid())
-  eventId                 String
-  event                   Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  userId                  String
-  user                    User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  status                  RegistrationStatus @default(CONFIRMED)
-  registeredAt            DateTime           @default(now())
-  confirmationEmailSentAt DateTime?
-
-  @@unique([eventId, userId])
-  @@index([eventId])
 }
 
 model Donation {
@@ -176,9 +88,6 @@ model Donation {
   // no reference_id of its own) back to this row.
   squarePlanVariationId String?
   status                DonationStatus @default(PENDING)
-
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   receiptEmailSentAt DateTime?
   createdAt          DateTime  @default(now())

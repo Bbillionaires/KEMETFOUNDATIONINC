@@ -14,7 +14,6 @@ export type EventCardData = {
   isFree: boolean;
   priceCents: number | null;
   capacity: number | null;
-  confirmedCount: number;
 };
 
 function formatPriceCents(cents: number | null): string {
@@ -23,8 +22,6 @@ function formatPriceCents(cents: number | null): string {
 }
 
 export function EventCard({ event }: { event: EventCardData }) {
-  const spotsLeft = event.capacity != null ? Math.max(event.capacity - event.confirmedCount, 0) : null;
-  const isFull = spotsLeft !== null && spotsLeft === 0;
   const truncatedDescription =
     event.description.length > 140 ? `${event.description.slice(0, 140).trim()}...` : event.description;
 
@@ -52,11 +49,7 @@ export function EventCard({ event }: { event: EventCardData }) {
           <Badge tone={event.isFree ? "green" : "gold"}>
             {event.isFree ? "Free" : formatPriceCents(event.priceCents)}
           </Badge>
-          {spotsLeft !== null && (
-            <Badge tone={isFull ? "red" : "gold"}>
-              {isFull ? "Waitlist Only" : `${spotsLeft} spot${spotsLeft === 1 ? "" : "s"} left`}
-            </Badge>
-          )}
+          {event.capacity != null && <Badge tone="gold">{event.capacity} capacity</Badge>}
         </div>
 
         <h3 className="mt-3 font-display text-lg font-bold text-kemet-black">{event.title}</h3>

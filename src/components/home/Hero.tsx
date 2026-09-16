@@ -31,10 +31,7 @@ export async function Hero() {
             {introParagraph}
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
-            <LinkButton href="/membership/register" size="lg">
-              Become a Member
-            </LinkButton>
-            <LinkButton href="/events" variant="outline" size="lg">
+            <LinkButton href="/events" size="lg">
               View Events
             </LinkButton>
             <LinkButton href="/donate" variant="secondary" size="lg">
