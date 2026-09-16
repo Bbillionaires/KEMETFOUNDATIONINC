@@ -19,7 +19,7 @@ function safeMetadataBase(url: string): URL {
   } catch {
     // Never let a malformed SITE_URL (e.g. a blank env var on the
     // hosting platform) crash the entire production build.
-    return new URL("https://kemetfoundationinc.org");
+    return new URL("https://kemetfoundationinc.vercel.app");
   }
 }
 

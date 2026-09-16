@@ -3,8 +3,9 @@ export const SITE_NAME = "Kemet Foundation Inc";
 // `||` (not `??`) so a blank string set in the hosting platform's
 // environment variables (e.g. an empty NEXT_PUBLIC_SITE_URL left over
 // from a template) falls back to the default instead of producing an
-// invalid empty URL.
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://kemetfoundationinc.org";
+// invalid empty URL. The org has not purchased kemetfoundationinc.org,
+// so the default points at the live Vercel deployment instead.
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://kemetfoundationinc.vercel.app";
 
 export const ORG_ADDRESS = {
   line1: "P.O. Box 2284",
