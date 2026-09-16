@@ -14,8 +14,18 @@ const playfair = Playfair_Display({
   weight: ["500", "600", "700"],
 });
 
+function safeMetadataBase(url: string): URL {
+  try {
+    return new URL(url);
+  } catch {
+    // Never let a malformed SITE_URL (e.g. a blank env var on the
+    // hosting platform) crash the entire production build.
+    return new URL("https://kemetfoundationinc.org");
+  }
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: safeMetadataBase(SITE_URL),
   title: {
     default: `${SITE_NAME} | Building Community. Preserving Legacy.`,
     template: `%s | ${SITE_NAME}`,

@@ -1,5 +1,10 @@
 export const SITE_NAME = "Kemet Foundation Inc";
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kemetfoundationinc.org";
+
+// `||` (not `??`) so a blank string set in the hosting platform's
+// environment variables (e.g. an empty NEXT_PUBLIC_SITE_URL left over
+// from a template) falls back to the default instead of producing an
+// invalid empty URL.
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://kemetfoundationinc.org";
 
 export const ORG_ADDRESS = {
   line1: "P.O. Box 2284",
@@ -8,7 +13,7 @@ export const ORG_ADDRESS = {
   zip: "32208",
 };
 
-export const ORG_EMAIL = process.env.NEXT_PUBLIC_ORG_EMAIL ?? "info@kemetfoundationinc.org";
+export const ORG_EMAIL = process.env.NEXT_PUBLIC_ORG_EMAIL || "info@kemetfoundationinc.org";
 
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
