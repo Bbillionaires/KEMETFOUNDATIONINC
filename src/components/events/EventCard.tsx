@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import { Card, Badge } from "@/components/ui/Card";
 
 export type EventCardData = {
-  id: string;
   slug: string;
   title: string;
   description: string;
@@ -13,8 +12,6 @@ export type EventCardData = {
   endAt: Date;
   isFree: boolean;
   priceCents: number | null;
-  capacity: number | null;
-  confirmedCount: number;
 };
 
 function formatPriceCents(cents: number | null): string {
@@ -23,8 +20,6 @@ function formatPriceCents(cents: number | null): string {
 }
 
 export function EventCard({ event }: { event: EventCardData }) {
-  const spotsLeft = event.capacity != null ? Math.max(event.capacity - event.confirmedCount, 0) : null;
-  const isFull = spotsLeft !== null && spotsLeft === 0;
   const truncatedDescription =
     event.description.length > 140 ? `${event.description.slice(0, 140).trim()}...` : event.description;
 
@@ -48,16 +43,9 @@ export function EventCard({ event }: { event: EventCardData }) {
       </div>
 
       <div className="flex flex-1 flex-col">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge tone={event.isFree ? "green" : "gold"}>
-            {event.isFree ? "Free" : formatPriceCents(event.priceCents)}
-          </Badge>
-          {spotsLeft !== null && (
-            <Badge tone={isFull ? "red" : "gold"}>
-              {isFull ? "Waitlist Only" : `${spotsLeft} spot${spotsLeft === 1 ? "" : "s"} left`}
-            </Badge>
-          )}
-        </div>
+        <Badge tone={event.isFree ? "green" : "gold"}>
+          {event.isFree ? "Free" : formatPriceCents(event.priceCents)}
+        </Badge>
 
         <h3 className="mt-3 font-display text-lg font-bold text-kemet-black">{event.title}</h3>
 

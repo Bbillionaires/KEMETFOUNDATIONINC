@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { contactSchema } from "@/lib/validations";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { sendEmail, escapeHtml, isEmailConfigured } from "@/lib/email";
+import { CONTACT_SUBJECT_OPTIONS, ORG_EMAIL, SITE_NAME } from "@/lib/constants";
 
 export async function POST(req: Request) {
   const ip = getClientIp(req.headers);
@@ -23,24 +24,48 @@ export async function POST(req: Request) {
     );
   }
 
-  // Honeypot: if filled, silently treat as spam and report success without saving,
-  // so bots get no signal that they were caught.
+  // Honeypot: if filled, silently treat as spam and report success without
+  // sending, so bots get no signal that they were caught.
   if (parsed.data.website) {
     return NextResponse.json({ success: true });
   }
 
   const { name, email, phone, subject, message } = parsed.data;
 
-  await prisma.contactSubmission.create({
-    data: {
-      name,
-      email,
-      phone: phone || null,
-      subject,
-      message,
-      ipAddress: ip,
-    },
+  if (!isEmailConfigured()) {
+    console.error(
+      "[contact] RESEND_API_KEY/EMAIL_FROM not configured — submission was not delivered:",
+      { name, email, subject }
+    );
+    return NextResponse.json(
+      { error: "Contact form is not yet configured. Please email us directly in the meantime." },
+      { status: 503 }
+    );
+  }
+
+  const subjectLabel = CONTACT_SUBJECT_OPTIONS.find((o) => o.value === subject)?.label ?? subject;
+
+  const delivered = await sendEmail({
+    to: ORG_EMAIL,
+    subject: `[${SITE_NAME} Contact] ${subjectLabel} — ${name}`,
+    html: `
+      <div style="font-family: sans-serif; color: #1a1a1a; line-height: 1.6;">
+        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        ${phone ? `<p><strong>Phone:</strong> ${escapeHtml(phone)}</p>` : ""}
+        <p><strong>Subject:</strong> ${escapeHtml(subjectLabel)}</p>
+        <p><strong>Message:</strong></p>
+        <p style="white-space: pre-line;">${escapeHtml(message)}</p>
+      </div>
+    `,
   });
+
+  if (!delivered) {
+    return NextResponse.json(
+      { error: "We couldn't send your message. Please try again in a moment." },
+      { status: 502 }
+    );
+  }
 
   return NextResponse.json({ success: true });
 }

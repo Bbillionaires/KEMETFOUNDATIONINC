@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
-import { getSiteContentMap } from "@/lib/site-content";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Our Mission",
@@ -12,7 +9,9 @@ export const metadata: Metadata = {
     "The mission, vision, and core principles of Kemet Foundation Inc: African heritage and cultural education, community development, and economic empowerment.",
 };
 
-const FALLBACKS = {
+// This site has no database or admin panel, so mission content is managed
+// directly in code: to edit this copy, edit this file and redeploy.
+const CONTENT = {
   mission_statement:
     "Kemet Foundation Inc exists to uplift our community by reconnecting people with African heritage and cultural education, strengthening families, and building pathways to economic empowerment. We are committed to community development and collective advancement, working alongside the people we serve to build institutions that last.",
   vision_statement:
@@ -27,8 +26,8 @@ const FALLBACKS = {
     "Our impact is measured in the families strengthened, the heritage preserved and passed on, and the opportunities created through education and economic empowerment. As a growing organization, we are committed to building sustainable institutions whose impact will be felt for generations, and we invite our community to grow with us.",
 } as const;
 
-export default async function MissionPage() {
-  const content = await getSiteContentMap(FALLBACKS);
+export default function MissionPage() {
+  const content = CONTENT;
   const corePrinciples = content.core_principles
     .split("\n")
     .map((line) => line.trim())

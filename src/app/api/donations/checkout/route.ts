@@ -1,14 +1,14 @@
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { donationSchema } from "@/lib/validations";
 import { getSquareClient, getSquareLocationId, isSquareConfigured } from "@/lib/square";
 import { SITE_URL } from "@/lib/constants";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import type { Order, CheckoutOptions } from "square";
 
+// This site has no database: donations are not persisted here. Square is
+// the system of record for payment status; the webhook below only sends a
+// notification email when a payment succeeds.
 export async function POST(req: Request) {
   const ip = getClientIp(req.headers);
   const rl = checkRateLimit(`donate-checkout:${ip}`, { limit: 15, windowMs: 60 * 60 * 1000 });
@@ -42,25 +42,21 @@ export async function POST(req: Request) {
   }
 
   const data = parsed.data;
-  const session = await getServerSession(authOptions);
   const locationId = getSquareLocationId();
-
-  // Amounts are always taken from the validated request body (server-side
-  // computed by donationSchema), never trusted from a client-supplied price.
-  const donation = await prisma.donation.create({
-    data: {
-      donorName: data.donorName,
-      donorEmail: data.donorEmail.toLowerCase(),
-      amountCents: data.amountCents,
-      frequency: data.frequency,
-      dedicationMessage: data.dedicationMessage || null,
-      publicRecognition: data.publicRecognition,
-      status: "PENDING",
-      userId: session?.user?.id ?? null,
-    },
-  });
-
   const dollars = (data.amountCents / 100).toFixed(2);
+
+  // Carried through to the resulting Payment (and this webhook's
+  // notification email) without needing any database lookup — see
+  // Payment.note in the Square Node SDK.
+  const paymentNote = [
+    `Donor: ${data.donorName}`,
+    data.frequency === "MONTHLY" ? "Monthly" : "One-time",
+    data.publicRecognition ? "OK to recognize publicly" : "Anonymous/private",
+    data.dedicationMessage ? `Message: ${data.dedicationMessage}` : "",
+  ]
+    .filter(Boolean)
+    .join(" | ")
+    .slice(0, 500);
 
   try {
     let subscriptionPlanVariationId: string | undefined;
@@ -68,8 +64,7 @@ export async function POST(req: Request) {
     if (data.frequency === "MONTHLY") {
       // Square subscriptions require a fixed-price Catalog subscription
       // plan; since donors pick an arbitrary amount, create a one-off plan
-      // + variation priced for this exact donation (see square.ts research
-      // notes — there is no inline arbitrary-amount subscription field).
+      // + variation priced for this exact donation.
       const planName = `Monthly Donation - $${dollars}`;
       const catalogResponse = await square.catalog.batchUpsert({
         idempotencyKey: randomUUID(),
@@ -117,19 +112,13 @@ export async function POST(req: Request) {
       if (!subscriptionPlanVariationId) {
         throw new Error("Square did not return a subscription plan variation ID");
       }
-
-      await prisma.donation.update({
-        where: { id: donation.id },
-        data: { squarePlanVariationId: subscriptionPlanVariationId },
-      });
     }
 
     const order: Order =
       data.frequency === "MONTHLY"
-        ? { locationId, referenceId: donation.id }
+        ? { locationId }
         : {
             locationId,
-            referenceId: donation.id,
             lineItems: [
               {
                 name: "Donation to Kemet Foundation Inc",
@@ -150,23 +139,16 @@ export async function POST(req: Request) {
       order,
       checkoutOptions,
       prePopulatedData: { buyerEmail: data.donorEmail },
+      paymentNote,
     });
 
     if (!paymentLink?.url) {
       throw new Error("Square did not return a payment link URL");
     }
 
-    await prisma.donation.update({
-      where: { id: donation.id },
-      data: { squarePaymentLinkId: paymentLink.id, squareOrderId: paymentLink.orderId },
-    });
-
     return NextResponse.json({ url: paymentLink.url });
   } catch (err) {
     console.error("[donations/checkout] Square checkout creation failed:", err instanceof Error ? err.message : err);
-    await prisma.donation
-      .update({ where: { id: donation.id }, data: { status: "FAILED" } })
-      .catch(() => {});
     return NextResponse.json(
       { error: "We couldn't start checkout. Please try again in a moment." },
       { status: 502 }

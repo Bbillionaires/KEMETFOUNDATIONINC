@@ -3,17 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { signOut, useSession } from "next-auth/react";
 import { KemetLogo } from "@/components/brand/KemetLogo";
 import { LinkButton } from "@/components/ui/Button";
 import { NAV_LINKS } from "@/lib/constants";
 
 export function Header() {
   const pathname = usePathname();
-  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
-
-  const isAdmin = session?.user?.role === "ADMIN" || session?.user?.role === "SUPERADMIN";
 
   return (
     <header className="sticky top-0 z-50 border-b border-kemet-gold/20 bg-kemet-white/95 backdrop-blur">
@@ -34,36 +30,13 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          {session ? (
-            <>
-              <Link
-                href={isAdmin ? "/admin" : "/dashboard"}
-                className="text-sm font-semibold uppercase tracking-wide text-kemet-black hover:text-kemet-gold-deep"
-              >
-                {isAdmin ? "Admin" : "Dashboard"}
-              </Link>
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="text-sm font-semibold uppercase tracking-wide text-kemet-black hover:text-kemet-gold-deep"
-              >
-                Sign Out
-              </button>
-            </>
-          ) : (
-            <Link
-              href="/membership/login"
-              className="text-sm font-semibold uppercase tracking-wide text-kemet-black hover:text-kemet-gold-deep"
-            >
-              Sign In
-            </Link>
-          )}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
           <LinkButton href="/donate" variant="secondary" size="sm">
             Donate
           </LinkButton>
-          <LinkButton href="/membership/register" variant="primary" size="sm">
+          <LinkButton href="/membership" variant="primary" size="sm">
             Become a Member
           </LinkButton>
         </div>
@@ -106,21 +79,12 @@ export function Header() {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link
-                href={session ? (isAdmin ? "/admin" : "/dashboard") : "/membership/login"}
-                onClick={() => setOpen(false)}
-                className="block text-base font-semibold uppercase tracking-wide text-kemet-black"
-              >
-                {session ? (isAdmin ? "Admin" : "Dashboard") : "Sign In"}
-              </Link>
-            </li>
           </ul>
           <div className="mt-6 flex flex-col gap-3">
             <LinkButton href="/donate" variant="secondary" className="w-full">
               Donate
             </LinkButton>
-            <LinkButton href="/membership/register" variant="primary" className="w-full">
+            <LinkButton href="/membership" variant="primary" className="w-full">
               Become a Member
             </LinkButton>
           </div>

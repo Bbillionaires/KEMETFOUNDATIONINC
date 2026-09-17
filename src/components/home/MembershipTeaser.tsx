@@ -17,7 +17,7 @@ export function MembershipTeaser() {
           generation. Members help shape our work and stand alongside a community invested in
           building something lasting.
         </p>
-        <LinkButton href="/membership/register" size="lg">
+        <LinkButton href="/membership" size="lg">
           Become a Member
         </LinkButton>
       </Container>

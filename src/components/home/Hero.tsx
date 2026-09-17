@@ -1,13 +1,7 @@
 import { LogoIntro } from "@/components/brand/LogoIntro";
 import { LinkButton } from "@/components/ui/Button";
-import { getSiteContent } from "@/lib/site-content";
 
-export async function Hero() {
-  const introParagraph = await getSiteContent(
-    "home_intro_paragraph",
-    "Kemet Foundation Inc unites African heritage, education, and economic empowerment to strengthen families and build lasting institutions for our community."
-  );
-
+export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-kemet-gold/20 bg-kemet-black pattern-kemet">
       <div className="absolute inset-0 bg-kemet-radial" aria-hidden="true" />
@@ -28,10 +22,11 @@ export async function Hero() {
             <span className="text-kemet-gold">Creating the Future.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-kemet-ivory/80 lg:mx-0">
-            {introParagraph}
+            Kemet Foundation Inc unites African heritage, education, and economic empowerment to
+            strengthen families and build lasting institutions for our community.
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
-            <LinkButton href="/membership/register" size="lg">
+            <LinkButton href="/membership" size="lg">
               Become a Member
             </LinkButton>
             <LinkButton href="/events" variant="outline" size="lg">

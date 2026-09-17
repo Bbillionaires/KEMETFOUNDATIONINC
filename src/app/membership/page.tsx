@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
-import { LinkButton } from "@/components/ui/Button";
+import { MembershipInterestForm } from "@/components/forms/MembershipInterestForm";
 
 export const metadata: Metadata = {
   title: "Membership",
@@ -21,7 +20,7 @@ const highlights = [
   },
   {
     title: "Get Involved",
-    body: "As a member, you can register for events and let us know how you'd like to volunteer or contribute to the foundation's mission.",
+    body: "As a member, you can let us know how you'd like to volunteer or contribute to the foundation's mission.",
   },
 ];
 
@@ -50,25 +49,17 @@ export default function MembershipPage() {
             ))}
           </div>
 
-          <div className="mt-16 rounded-sm border border-kemet-black/10 bg-kemet-ivory p-8 text-center sm:p-12">
-            <h2 className="font-display text-2xl font-bold text-kemet-black sm:text-3xl">
-              Ready to Join?
+          <div className="mx-auto mt-16 max-w-3xl rounded-sm border border-kemet-black/10 bg-kemet-ivory p-8 sm:p-12">
+            <h2 className="text-center font-display text-2xl font-bold text-kemet-black sm:text-3xl">
+              Become a Member
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-kemet-charcoal/80">
-              Applying for membership takes just a few minutes. Once submitted, your application
-              will be reviewed by the foundation.
+            <p className="mx-auto mt-4 max-w-xl text-center text-base leading-relaxed text-kemet-charcoal/80">
+              Fill out the form below to let us know you&rsquo;re interested. A member of our team
+              will follow up with you directly.
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <LinkButton href="/membership/register" size="lg">
-                Become a Member
-              </LinkButton>
+            <div className="mt-10">
+              <MembershipInterestForm />
             </div>
-            <p className="mt-6 text-sm text-kemet-charcoal/80">
-              Already a member?{" "}
-              <Link href="/membership/login" className="font-semibold text-kemet-gold-deep underline">
-                Sign in
-              </Link>
-            </p>
           </div>
         </Container>
       </section>

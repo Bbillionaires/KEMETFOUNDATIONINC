@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
-import { safeQuery } from "@/lib/safe-query";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { LinkButton } from "@/components/ui/Button";
 import { EventCard, type EventCardData } from "@/components/events/EventCard";
 import { EventsViewToggle } from "@/components/events/EventsViewToggle";
 import type { CalendarEvent } from "@/components/events/EventCalendar";
-import type { Event } from "@prisma/client";
+import { getUpcomingEvents, getPastEvents, type EventRecord } from "@/lib/events-data";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -15,70 +13,32 @@ export const metadata: Metadata = {
     "Upcoming and past events hosted by Kemet Foundation Inc — community gatherings, cultural education, and family-strengthening programs.",
 };
 
-// Registration counts and the upcoming/past cutoff change constantly, so this
-// page is always rendered fresh rather than statically cached.
-export const dynamic = "force-dynamic";
-
-type EventWithCount = Event & {
-  _count: { registrations: number };
-};
-
-async function getEvents() {
-  const now = new Date();
-
-  const [upcoming, past] = await Promise.all([
-    safeQuery(
-      () =>
-        prisma.event.findMany({
-          where: { status: "PUBLISHED", startAt: { gte: now } },
-          orderBy: { startAt: "asc" },
-          include: { _count: { select: { registrations: { where: { status: "CONFIRMED" } } } } },
-        }),
-      [] as EventWithCount[]
-    ),
-    safeQuery(
-      () =>
-        prisma.event.findMany({
-          where: { status: "PUBLISHED", startAt: { lt: now } },
-          orderBy: { startAt: "desc" },
-          take: 12,
-          include: { _count: { select: { registrations: { where: { status: "CONFIRMED" } } } } },
-        }),
-      [] as EventWithCount[]
-    ),
-  ]);
-
-  return { upcoming, past };
-}
-
-function toCardData(event: EventWithCount): EventCardData {
+function toCardData(event: EventRecord): EventCardData {
   return {
-    id: event.id,
     slug: event.slug,
     title: event.title,
     description: event.description,
     imageUrl: event.imageUrl,
     location: event.location,
-    startAt: event.startAt,
-    endAt: event.endAt,
+    startAt: new Date(event.startAt),
+    endAt: new Date(event.endAt),
     isFree: event.isFree,
     priceCents: event.priceCents,
-    capacity: event.capacity,
-    confirmedCount: event._count.registrations,
   };
 }
 
-function toCalendarEvent(event: EventWithCount): CalendarEvent {
+function toCalendarEvent(event: EventRecord): CalendarEvent {
   return {
-    id: event.id,
+    id: event.slug,
     slug: event.slug,
     title: event.title,
-    startAt: event.startAt.toISOString(),
+    startAt: event.startAt,
   };
 }
 
-export default async function EventsPage() {
-  const { upcoming, past } = await getEvents();
+export default function EventsPage() {
+  const upcoming = getUpcomingEvents();
+  const past = getPastEvents();
   const upcomingCards = upcoming.map(toCardData);
   const pastCards = past.map(toCardData);
   const calendarEvents = upcoming.map(toCalendarEvent);
@@ -104,14 +64,18 @@ export default async function EventsPage() {
           {upcomingCards.length === 0 ? (
             <div className="mx-auto max-w-xl rounded-sm border border-kemet-gold/30 bg-kemet-ivory p-10 text-center">
               <p className="text-base leading-relaxed text-kemet-charcoal/80">
-                New events are announced regularly &mdash; check back soon.
+                New events are announced regularly &mdash; check back soon, or{" "}
+                <a href="/contact" className="font-semibold text-kemet-gold-deep hover:underline">
+                  contact us
+                </a>{" "}
+                to be notified.
               </p>
             </div>
           ) : (
             <EventsViewToggle events={calendarEvents}>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {upcomingCards.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.slug} event={event} />
                 ))}
               </div>
             </EventsViewToggle>
@@ -131,7 +95,7 @@ export default async function EventsPage() {
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {pastCards.map((event) => (
-                <EventCard key={event.id} event={event} />
+                <EventCard key={event.slug} event={event} />
               ))}
             </div>
           )}

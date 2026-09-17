@@ -13,7 +13,7 @@ const options = [
   {
     title: "Become a Member",
     description: "Join our community and help guide the direction of our work.",
-    href: "/membership/register",
+    href: "/membership",
     cta: "Join Us",
   },
   {
