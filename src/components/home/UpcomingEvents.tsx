@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { safeQuery } from "@/lib/safe-query";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
@@ -17,11 +18,15 @@ const timeFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 export async function UpcomingEvents() {
-  const events = await prisma.event.findMany({
-    where: { status: "PUBLISHED", startAt: { gte: new Date() } },
-    orderBy: { startAt: "asc" },
-    take: 3,
-  });
+  const events = await safeQuery(
+    () =>
+      prisma.event.findMany({
+        where: { status: "PUBLISHED", startAt: { gte: new Date() } },
+        orderBy: { startAt: "asc" },
+        take: 3,
+      }),
+    []
+  );
 
   return (
     <section className="bg-kemet-white py-20">

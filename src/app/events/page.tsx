@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { safeQuery } from "@/lib/safe-query";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { LinkButton } from "@/components/ui/Button";
@@ -26,17 +27,25 @@ async function getEvents() {
   const now = new Date();
 
   const [upcoming, past] = await Promise.all([
-    prisma.event.findMany({
-      where: { status: "PUBLISHED", startAt: { gte: now } },
-      orderBy: { startAt: "asc" },
-      include: { _count: { select: { registrations: { where: { status: "CONFIRMED" } } } } },
-    }),
-    prisma.event.findMany({
-      where: { status: "PUBLISHED", startAt: { lt: now } },
-      orderBy: { startAt: "desc" },
-      take: 12,
-      include: { _count: { select: { registrations: { where: { status: "CONFIRMED" } } } } },
-    }),
+    safeQuery(
+      () =>
+        prisma.event.findMany({
+          where: { status: "PUBLISHED", startAt: { gte: now } },
+          orderBy: { startAt: "asc" },
+          include: { _count: { select: { registrations: { where: { status: "CONFIRMED" } } } } },
+        }),
+      [] as EventWithCount[]
+    ),
+    safeQuery(
+      () =>
+        prisma.event.findMany({
+          where: { status: "PUBLISHED", startAt: { lt: now } },
+          orderBy: { startAt: "desc" },
+          take: 12,
+          include: { _count: { select: { registrations: { where: { status: "CONFIRMED" } } } } },
+        }),
+      [] as EventWithCount[]
+    ),
   ]);
 
   return { upcoming, past };

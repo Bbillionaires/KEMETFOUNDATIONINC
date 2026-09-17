@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { safeQuery } from "@/lib/safe-query";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
@@ -12,10 +13,14 @@ export const metadata: Metadata = {
 };
 
 export default async function TeamPage() {
-  const teamMembers = await prisma.teamMember.findMany({
-    where: { isActive: true },
-    orderBy: { sortOrder: "asc" },
-  });
+  const teamMembers = await safeQuery(
+    () =>
+      prisma.teamMember.findMany({
+        where: { isActive: true },
+        orderBy: { sortOrder: "asc" },
+      }),
+    []
+  );
 
   return (
     <section className="bg-kemet-white py-20">
