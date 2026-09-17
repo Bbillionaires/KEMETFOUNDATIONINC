@@ -71,6 +71,12 @@ export function Footer() {
         <p>&copy; {new Date().getFullYear()} Kemet Foundation Inc. All rights reserved.</p>
         <p>A Florida nonprofit corporation.</p>
       </Container>
+
+      <div className="kemet-divider" />
+
+      <Container className="py-4 text-center text-xs text-kemet-ivory/50">
+        <p>Website Developed by De&apos;Aris Henry</p>
+      </Container>
     </footer>
   );
 }

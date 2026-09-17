@@ -9,8 +9,14 @@ const variantClasses: Record<Variant, string> = {
     "bg-kemet-gold text-kemet-black hover:bg-kemet-gold-light shadow-gold border border-kemet-gold-deep",
   secondary:
     "bg-kemet-green text-kemet-white hover:bg-kemet-green-light border border-kemet-green-deep",
+  // Dark text by default since most outline buttons sit on light sections;
+  // the rare dark-background usage (e.g. the homepage hero) overrides with
+  // `!text-kemet-white` — a plain `text-kemet-white` class here would not
+  // reliably win, since Tailwind's generated stylesheet order (not the
+  // order classes appear in a className string) decides which same-
+  // specificity utility applies.
   outline:
-    "bg-transparent text-kemet-white border border-kemet-gold hover:bg-kemet-gold/10",
+    "bg-transparent text-kemet-black border border-kemet-gold-deep hover:bg-kemet-gold/10",
   ghost: "bg-transparent text-kemet-black hover:bg-kemet-black/5",
 };
 
