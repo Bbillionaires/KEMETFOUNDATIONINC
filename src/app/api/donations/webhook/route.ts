@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { WebhooksHelper } from "square";
 import { isSquareConfigured } from "@/lib/square";
 import { sendEmail, escapeHtml } from "@/lib/email";
-import { ORG_EMAIL, SITE_NAME } from "@/lib/constants";
+import { NOTIFICATION_EMAILS, SITE_NAME } from "@/lib/constants";
 
 export const runtime = "nodejs";
 
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
         });
 
         await sendEmail({
-          to: ORG_EMAIL,
+          to: NOTIFICATION_EMAILS,
           subject: `[${SITE_NAME}] New donation received — ${amountDisplay}`,
           html: `
             <div style="font-family: sans-serif; color: #1a1a1a; line-height: 1.6;">

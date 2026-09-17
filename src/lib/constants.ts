@@ -13,7 +13,20 @@ export const ORG_ADDRESS = {
   zip: "32208",
 };
 
+// Publicly displayed contact address (footer, contact page, mailto links).
 export const ORG_EMAIL = process.env.NEXT_PUBLIC_ORG_EMAIL || "info@kemetfoundationinc.org";
+
+// Where form submission / donation notification emails are actually
+// delivered — separate from the public-facing ORG_EMAIL above so the
+// organization can route internal notifications to personal inboxes
+// without changing what's shown to site visitors. Comma-separate multiple
+// addresses via the ORG_NOTIFICATION_EMAILS env var to override.
+export const NOTIFICATION_EMAILS = (
+  process.env.ORG_NOTIFICATION_EMAILS?.split(",").map((e) => e.trim()).filter(Boolean) ?? [
+    "raphaell759@yahoo.com",
+    "greenwood100inc@gmail.com",
+  ]
+);
 
 export const NAV_LINKS = [
   { href: "/", label: "Home" },

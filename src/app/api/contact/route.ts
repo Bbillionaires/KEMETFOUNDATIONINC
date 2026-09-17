@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { contactSchema } from "@/lib/validations";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { sendEmail, escapeHtml, isEmailConfigured } from "@/lib/email";
-import { CONTACT_SUBJECT_OPTIONS, ORG_EMAIL, SITE_NAME } from "@/lib/constants";
+import { CONTACT_SUBJECT_OPTIONS, NOTIFICATION_EMAILS, SITE_NAME } from "@/lib/constants";
 
 export async function POST(req: Request) {
   const ip = getClientIp(req.headers);
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   const subjectLabel = CONTACT_SUBJECT_OPTIONS.find((o) => o.value === subject)?.label ?? subject;
 
   const delivered = await sendEmail({
-    to: ORG_EMAIL,
+    to: NOTIFICATION_EMAILS,
     subject: `[${SITE_NAME} Contact] ${subjectLabel} — ${name}`,
     html: `
       <div style="font-family: sans-serif; color: #1a1a1a; line-height: 1.6;">

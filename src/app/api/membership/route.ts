@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { membershipInterestSchema } from "@/lib/validations";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { sendEmail, escapeHtml, isEmailConfigured } from "@/lib/email";
-import { ORG_EMAIL, SITE_NAME } from "@/lib/constants";
+import { NOTIFICATION_EMAILS, SITE_NAME } from "@/lib/constants";
 
 // This site has no accounts/database. A membership "application" is just a
 // request the foundation follows up on directly, delivered by email.
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     .join("");
 
   const delivered = await sendEmail({
-    to: ORG_EMAIL,
+    to: NOTIFICATION_EMAILS,
     subject: `[${SITE_NAME}] New membership interest — ${data.firstName} ${data.lastName}`,
     html: `
       <div style="font-family: sans-serif; color: #1a1a1a; line-height: 1.6;">

@@ -5,7 +5,7 @@
  */
 
 type SendEmailInput = {
-  to: string;
+  to: string | string[];
   subject: string;
   html: string;
 };
@@ -25,7 +25,7 @@ export function escapeHtml(input: string): string {
 
 export async function sendEmail({ to, subject, html }: SendEmailInput): Promise<boolean> {
   if (!isEmailConfigured()) {
-    console.info(`[email:disabled] Would send "${subject}" to ${to}`);
+    console.info(`[email:disabled] Would send "${subject}" to ${Array.isArray(to) ? to.join(", ") : to}`);
     return false;
   }
 
