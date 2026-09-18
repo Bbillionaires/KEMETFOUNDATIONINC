@@ -7,13 +7,13 @@ import { FireParticles } from "@/components/brand/FireParticles";
 const SESSION_KEY = "kemet-intro-seen-v1";
 
 // Relative size/spacing of the wordmark crop against the emblem crop,
-// measured directly from the official source artwork (1372x504 emblem
-// crop, 1097x395 wordmark crop, 7px original-image gap between them) so
+// measured directly from the official source artwork (821x283 emblem
+// crop, 628x208 wordmark crop, 8px original-image gap between them) so
 // the two pieces recompose at their true proportions when animated
 // separately, rather than each independently stretching to fill its
 // container.
-const WORDMARK_WIDTH_PCT = (1097 / 1372) * 100;
-const WORDMARK_GAP_PCT = (7 / 1372) * 100;
+const WORDMARK_WIDTH_PCT = (628 / 821) * 100;
+const WORDMARK_GAP_PCT = (8 / 821) * 100;
 
 type Phase = "static" | "separate" | "rise" | "spin" | "extinguish" | "settle" | "done";
 
