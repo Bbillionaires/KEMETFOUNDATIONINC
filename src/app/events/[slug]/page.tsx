@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { format } from "date-fns";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { EVENTS, getEventBySlug } from "@/lib/events-data";
 import { ORG_EMAIL } from "@/lib/constants";
+import { formatEventDate, formatEventTime } from "@/lib/format-date";
 
 export function generateStaticParams() {
   return EVENTS.map((event) => ({ slug: event.slug }));
@@ -52,8 +52,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
 
           <h1 className="mt-4 font-display text-3xl font-bold sm:text-4xl">{event.title}</h1>
           <p className="mt-3 text-kemet-ivory/85">
-            {format(startAt, "EEEE, MMMM d, yyyy")} &middot; {format(startAt, "h:mm a")}&ndash;
-            {format(endAt, "h:mm a")}
+            {formatEventDate(startAt)} &middot; {formatEventTime(startAt)}&ndash;
+            {formatEventTime(endAt)}
           </p>
           <p className="mt-1 text-kemet-ivory/85">{event.location}</p>
         </Container>

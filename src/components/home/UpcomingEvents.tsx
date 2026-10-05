@@ -4,17 +4,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 import { getUpcomingEvents } from "@/lib/events-data";
-
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
-
-const timeFormatter = new Intl.DateTimeFormat("en-US", {
-  hour: "numeric",
-  minute: "2-digit",
-});
+import { formatEventMonthDayYear, formatEventTime } from "@/lib/format-date";
 
 export function UpcomingEvents() {
   const events = getUpcomingEvents(3);
@@ -41,13 +31,13 @@ export function UpcomingEvents() {
                 return (
                   <Card key={event.slug} className="flex flex-col">
                     <p className="text-xs font-semibold uppercase tracking-[0.25em] text-kemet-gold-deep">
-                      {dateFormatter.format(startAt)}
+                      {formatEventMonthDayYear(startAt)}
                     </p>
                     <h3 className="mt-2 font-display text-lg font-bold text-kemet-black">
                       {event.title}
                     </h3>
                     <p className="mt-2 text-sm text-kemet-charcoal/70">
-                      {timeFormatter.format(startAt)} &middot; {event.location}
+                      {formatEventTime(startAt)} &middot; {event.location}
                     </p>
                     <p className="mt-3 flex-1 text-sm leading-relaxed text-kemet-charcoal/80">
                       {event.description.length > 140

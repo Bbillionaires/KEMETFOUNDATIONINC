@@ -18,10 +18,25 @@ export type EventRecord = {
   priceCents: number | null;
 };
 
-// No events have been added yet — this array is intentionally empty rather
-// than seeded with placeholder events. Add real events here as they're
-// scheduled.
-export const EVENTS: EventRecord[] = [];
+export const EVENTS: EventRecord[] = [
+  {
+    slug: "remember-the-works-of-marcus-garvey",
+    title: "Remember the Works of Marcus M. Garvey",
+    description: `Kemet Foundation Inc presents "Remember the Works of Marcus M. Garvey" — a family affair celebrating the history and legacy of Marcus Mosiah Garvey, who gave us the Red, Black & Green flag ("The Universal Africa Flag") and taught us: "Up ye mighty race, accomplish what ye will" and "A race that knows not its history is like a tree without roots."
+
+The day includes history, live music performance, poets, art & craft, and food. Bring peace, harmony, respect — and chairs.
+
+Starts 10 AM until evening.
+
+For more info: (904) 888-0094 / KemetFoundationInINC@gmail.com`,
+    imageUrl: "/events/marcus-garvey-remembrance.jpg",
+    location: "Rainhaver Park, 5198 118th St, Jacksonville, FL 32244",
+    startAt: "2026-11-15T10:00:00-05:00",
+    endAt: "2026-11-15T18:00:00-05:00",
+    isFree: true,
+    priceCents: null,
+  },
+];
 
 export function getUpcomingEvents(limit?: number): EventRecord[] {
   const now = new Date();

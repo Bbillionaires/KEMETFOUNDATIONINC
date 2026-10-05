@@ -13,6 +13,12 @@ export const ORG_ADDRESS = {
   zip: "32208",
 };
 
+// Event pages are statically rendered, often on build servers running in
+// UTC — without pinning a timeZone, formatted event times would reflect
+// the build/render server's clock instead of the organization's actual
+// (Florida) local time. See src/lib/format-date.ts.
+export const ORG_TIMEZONE = "America/New_York";
+
 // Publicly displayed contact address (footer, contact page, mailto links).
 export const ORG_EMAIL = process.env.NEXT_PUBLIC_ORG_EMAIL || "info@kemetfoundationinc.org";
 

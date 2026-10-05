@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { format } from "date-fns";
 import { Card, Badge } from "@/components/ui/Card";
+import { formatEventDate, formatEventTime } from "@/lib/format-date";
 
 export type EventCardData = {
   slug: string;
@@ -50,10 +50,10 @@ export function EventCard({ event }: { event: EventCardData }) {
         <h3 className="mt-3 font-display text-lg font-bold text-kemet-black">{event.title}</h3>
 
         <p className="mt-1 text-sm font-semibold text-kemet-gold-deep">
-          {format(event.startAt, "EEEE, MMMM d, yyyy")}
+          {formatEventDate(event.startAt)}
         </p>
         <p className="text-sm text-kemet-charcoal/70">
-          {format(event.startAt, "h:mm a")}&ndash;{format(event.endAt, "h:mm a")} &middot; {event.location}
+          {formatEventTime(event.startAt)}&ndash;{formatEventTime(event.endAt)} &middot; {event.location}
         </p>
 
         <p className="mt-3 flex-1 text-sm leading-relaxed text-kemet-charcoal/80">{truncatedDescription}</p>
