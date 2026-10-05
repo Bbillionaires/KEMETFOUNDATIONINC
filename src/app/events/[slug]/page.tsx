@@ -67,7 +67,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
               <img
                 src={event.imageUrl}
                 alt={`${event.title} event`}
-                className="mb-8 h-64 w-full rounded-sm object-cover"
+                className="mb-8 h-auto w-full rounded-sm object-contain"
               />
             )}
             <div className="whitespace-pre-line text-base leading-relaxed text-kemet-charcoal/90">
