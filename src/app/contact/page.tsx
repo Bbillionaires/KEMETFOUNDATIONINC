@@ -4,6 +4,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { ORG_ADDRESS, ORG_EMAIL, SITE_NAME } from "@/lib/constants";
+import { CONTACT_PAGE_CONTENT } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -16,8 +17,8 @@ export default function ContactPage() {
       <Container>
         <SectionHeading
           eyebrow="Contact Us"
-          title="We'd Love to Hear From You"
-          description="Whether you have a question about membership, events, donations, volunteering, or partnerships, send us a message and we'll get back to you."
+          title={CONTACT_PAGE_CONTENT.title}
+          description={CONTACT_PAGE_CONTENT.description}
         />
 
         <div className="mt-14 grid gap-10 lg:grid-cols-5">

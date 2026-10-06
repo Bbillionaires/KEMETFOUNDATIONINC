@@ -4,6 +4,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { DonateForm } from "@/components/forms/DonateForm";
 import { SITE_NAME } from "@/lib/constants";
+import { DONATE_PAGE_CONTENT } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Donate",
@@ -16,8 +17,8 @@ export default function DonatePage() {
       <Container className="max-w-3xl">
         <SectionHeading
           eyebrow="Give"
-          title="Support Our Mission"
-          description="Your gift helps us invest in African heritage and cultural education, community development, family strengthening, and economic empowerment."
+          title={DONATE_PAGE_CONTENT.title}
+          description={DONATE_PAGE_CONTENT.description}
         />
 
         <Card className="mt-14">
@@ -25,8 +26,7 @@ export default function DonatePage() {
         </Card>
 
         <p className="mx-auto mt-6 max-w-xl text-center text-xs leading-relaxed text-kemet-charcoal/60">
-          {SITE_NAME} will provide a donation acknowledgment for your records. Please contact us
-          regarding the tax-deductibility of your gift.
+          {SITE_NAME} {DONATE_PAGE_CONTENT.acknowledgmentNotice}
         </p>
       </Container>
     </section>

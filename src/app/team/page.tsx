@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { TEAM_MEMBERS } from "@/lib/team-data";
+import { TEAM_PAGE_CONTENT } from "@/lib/site-content";
 
 export const metadata: Metadata = {
   title: "Our Team",
@@ -13,7 +14,7 @@ export default function TeamPage() {
   return (
     <section className="bg-kemet-white py-20">
       <Container>
-        <SectionHeading eyebrow="Our Team" title="The People Behind Kemet Foundation" />
+        <SectionHeading eyebrow="Our Team" title={TEAM_PAGE_CONTENT.title} />
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {TEAM_MEMBERS.map((member) => (

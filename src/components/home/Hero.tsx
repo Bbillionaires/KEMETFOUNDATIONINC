@@ -1,5 +1,6 @@
 import { LogoIntro } from "@/components/brand/LogoIntro";
 import { LinkButton } from "@/components/ui/Button";
+import { HERO_CONTENT } from "@/lib/site-content";
 
 export function Hero() {
   return (
@@ -17,18 +18,17 @@ export function Hero() {
 
         <div className="lg:w-7/12">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.35em] text-kemet-gold">
-            A Florida Nonprofit Organization
+            {HERO_CONTENT.eyebrow}
           </p>
           <h1 className="font-display text-4xl font-bold leading-tight text-kemet-white sm:text-5xl lg:text-6xl">
-            Building Community.
+            {HERO_CONTENT.headingLines[0]}
             <br />
-            Preserving Legacy.
+            {HERO_CONTENT.headingLines[1]}
             <br />
-            <span className="text-kemet-gold">Creating the Future.</span>
+            <span className="text-kemet-gold">{HERO_CONTENT.headingLines[2]}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-kemet-ivory/80 lg:mx-0">
-            Kemet Foundation Inc unites African heritage, education, and economic empowerment to
-            strengthen families and build lasting institutions for our community.
+            {HERO_CONTENT.body}
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
             <LinkButton href="/membership" size="lg">
