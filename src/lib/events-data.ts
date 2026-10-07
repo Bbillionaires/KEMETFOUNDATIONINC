@@ -36,6 +36,23 @@ For more info: (904) 888-0094 / KemetFoundationInINC@gmail.com`,
     isFree: true,
     priceCents: null,
   },
+  {
+    slug: "imam-umar-abdul-sharif-community-event",
+    title: "Imam Umar Abdul Sharif Community Event",
+    description: `Let's come together to honor our dear beloved father, brother & mentor for his service, works, and knowledge shared with our community.
+
+Please send all donations to:
+Cash App: $khadijahsharifburns
+Zelle: 904-450-2473
+
+A Life Of Faith. A Legacy Of Service. Forever In Our Hearts.`,
+    imageUrl: "/events/imam-umar-abdul-sharif-community-event.jpg",
+    location: "2509 N. Main Street, Jacksonville, FL 32206",
+    startAt: "2026-10-09T15:00:00-04:00",
+    endAt: "2026-10-09T19:00:00-04:00",
+    isFree: true,
+    priceCents: null,
+  },
 ];
 
 export function getUpcomingEvents(limit?: number): EventRecord[] {
