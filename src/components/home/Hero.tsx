@@ -8,12 +8,7 @@ export function Hero() {
       <div className="absolute inset-0 bg-kemet-radial" aria-hidden="true" />
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-10 px-4 py-20 text-center sm:px-6 lg:flex-row lg:gap-16 lg:py-28 lg:text-left">
         <div className="w-full max-w-md lg:w-5/12">
-          {/* Light plate behind the logo: the wordmark in the official
-              artwork is solid black, which is illegible directly on this
-              section's dark background. */}
-          <div className="rounded-md border border-kemet-gold/30 bg-kemet-ivory p-6 shadow-gold sm:p-8">
-            <LogoIntro />
-          </div>
+          <LogoIntro />
         </div>
 
         <div className="lg:w-7/12">

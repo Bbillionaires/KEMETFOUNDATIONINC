@@ -15,6 +15,15 @@ const SESSION_KEY = "kemet-intro-seen-v1";
 const WORDMARK_WIDTH_PCT = (628 / 821) * 100;
 const WORDMARK_GAP_PCT = (8 / 821) * 100;
 
+// Light plate behind the logo: the wordmark in the official artwork is
+// solid black, illegible directly on the hero's dark background. Used as
+// a permanent backdrop for the static logo, and faded in/out in sync with
+// the wordmark during the animation (see the `opacity: wordmarkOpacity`
+// plate below) so the emblem can still float freely off the dark
+// background while airborne, rather than visibly spinning inside a
+// static white card the whole time.
+const PLATE_CLASSES = "rounded-md border border-kemet-gold/30 bg-kemet-ivory shadow-gold";
+
 type Phase = "static" | "separate" | "rise" | "spin" | "extinguish" | "settle" | "done";
 
 /**
@@ -164,7 +173,7 @@ export function LogoIntro() {
   if (!mounted) {
     // Server-rendered / pre-hydration fallback: plain static logo, no layout shift.
     return (
-      <div className="mx-auto flex w-full max-w-md justify-center">
+      <div className={`mx-auto flex w-full max-w-md justify-center p-6 sm:p-8 ${PLATE_CLASSES}`}>
         <KemetLogo className="h-auto w-full" />
       </div>
     );
@@ -172,7 +181,7 @@ export function LogoIntro() {
 
   if (phase === "done") {
     return (
-      <div className="mx-auto flex w-full max-w-md justify-center">
+      <div className={`mx-auto flex w-full max-w-md justify-center p-6 sm:p-8 ${PLATE_CLASSES}`}>
         <KemetLogo className="h-auto w-full" />
       </div>
     );
@@ -188,9 +197,11 @@ export function LogoIntro() {
         Skip Intro
       </button>
 
+      <div aria-hidden="true" className={`pointer-events-none absolute inset-0 ${PLATE_CLASSES}`} style={{ opacity: wordmarkOpacity }} />
+
       <div
         ref={containerRef}
-        className="relative flex w-full flex-col items-center"
+        className="relative flex w-full flex-col items-center p-6 sm:p-8"
         style={{ transformStyle: "preserve-3d" }}
       >
         <div
