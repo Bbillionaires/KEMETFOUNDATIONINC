@@ -94,10 +94,15 @@ export const NEWSLETTER_SECTION_CONTENT = {
     "Get updates on upcoming events, announcements, and ways to get involved with Kemet Foundation Inc.",
 };
 
-export const VIDEO_SECTION_CONTENT = {
+export const VIDEO_HIGHLIGHTS_CONTENT = {
   eyebrow: "Watch",
-  title: "See Our Work in Action",
-  youtubeId: "9Ex8eoBq7bM",
+  title: "Kemet Video Highlights",
+};
+
+export const VIDEOS_PAGE_CONTENT = {
+  eyebrow: "Watch",
+  title: "Videos",
+  description: "Videos shared by Kemet Foundation Inc.",
 };
 
 export const MISSION_PAGE_CONTENT = {

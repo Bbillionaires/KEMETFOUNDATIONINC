@@ -97,6 +97,7 @@ There's no admin panel — content changes are code changes, committed and redep
 
 - **Events:** `src/lib/events-data.ts` — add/edit/remove entries in the `EVENTS` array.
 - **Team members:** `src/lib/team-data.ts`.
+- **Videos:** `src/lib/videos-data.ts` — add/edit/remove entries in the `VIDEOS` array; each one appears on the `/videos` page, and the first is also featured on the homepage's "Kemet Video Highlights" section.
 - **Page copy** (hero text, mission statement, section headings, etc.): `src/lib/site-content.ts`,
   consolidated there so copy can be found and edited in one place instead of scattered across page
   components.
