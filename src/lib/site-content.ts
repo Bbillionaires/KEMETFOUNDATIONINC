@@ -94,6 +94,12 @@ export const NEWSLETTER_SECTION_CONTENT = {
     "Get updates on upcoming events, announcements, and ways to get involved with Kemet Foundation Inc.",
 };
 
+export const VIDEO_SECTION_CONTENT = {
+  eyebrow: "Watch",
+  title: "See Our Work in Action",
+  youtubeId: "9Ex8eoBq7bM",
+};
+
 export const MISSION_PAGE_CONTENT = {
   heroEyebrow: "Our Mission",
   heroTitle: "Heritage, Family, and Empowerment",

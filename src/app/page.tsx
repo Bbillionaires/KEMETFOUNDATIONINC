@@ -7,6 +7,7 @@ import { UpcomingEvents } from "@/components/home/UpcomingEvents";
 import { GetInvolved } from "@/components/home/GetInvolved";
 import { DonateBanner } from "@/components/home/DonateBanner";
 import { NewsletterSection } from "@/components/home/NewsletterSection";
+import { VideoSection } from "@/components/home/VideoSection";
 import { SITE_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function HomePage() {
       <GetInvolved />
       <DonateBanner />
       <NewsletterSection />
+      <VideoSection />
     </>
   );
 }
