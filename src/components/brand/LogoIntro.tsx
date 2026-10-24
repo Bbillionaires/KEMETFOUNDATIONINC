@@ -4,8 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { KemetLogo } from "@/components/brand/KemetLogo";
 import { FireParticles } from "@/components/brand/FireParticles";
 
-const SESSION_KEY = "kemet-intro-seen-v1";
-
 // Relative size/spacing of the wordmark crop against the emblem crop,
 // measured directly from the official source artwork (821x283 emblem
 // crop, 628x208 wordmark crop, 8px original-image gap between them) so
@@ -30,7 +28,7 @@ type Phase = "static" | "separate" | "rise" | "spin" | "extinguish" | "settle" |
  * Cinematic homepage entrance: the winged emblem separates from the
  * wordmark, rises toward the viewer in 3D, performs a controlled spin,
  * ignites with flame particles, extinguishes, and settles back into the
- * normal static logo. Runs once per browser session, respects
+ * normal static logo. Plays on every visit, respects
  * prefers-reduced-motion, and never blocks page interaction (nav, scroll,
  * and buttons remain usable throughout).
  */
@@ -62,14 +60,8 @@ export function LogoIntro() {
   useEffect(() => {
     setMounted(true);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let alreadySeen = false;
-    try {
-      alreadySeen = sessionStorage.getItem(SESSION_KEY) === "1";
-    } catch {
-      alreadySeen = false;
-    }
 
-    if (reducedMotion || alreadySeen) {
+    if (reducedMotion) {
       setSkipAnimation(true);
       setPhase("done");
     } else {
@@ -90,11 +82,6 @@ export function LogoIntro() {
     setTransform("");
     setWordmarkOpacity(1);
     setEmblemScale(1);
-    try {
-      sessionStorage.setItem(SESSION_KEY, "1");
-    } catch {
-      /* sessionStorage unavailable (private browsing) — animation will replay, which is an acceptable fallback */
-    }
   }
 
   useEffect(() => {
